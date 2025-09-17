@@ -1,704 +1,242 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JMVEST Finanzcheck – Premium UI</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JMVEST Finanzcheck – Landing</title>
+  <meta name="description" content="Der JMVEST Finanzcheck: Klar, schnell und schön. Finde deine passende Sparrate, Zielreichweite und Visualisierungen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      /* Match Finanzrechner theme */
+      --brand-700:#0e3c22;
+      --brand-600:#134e2d;
+      --brand-500:#1b6a40;
+      --accent-500:#3b82f6;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --outline:#e2e8f0;
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+      --bg: radial-gradient(1200px 600px at 10% -10%, #c7f9cc22 0%, transparent 60%),
+            radial-gradient(1200px 600px at 110% 10%, #b1e3ff22 0%, transparent 60%),
+            linear-gradient(180deg, #f7faf9 0%, #eef3f2 100%);
+      --card: rgba(255,255,255,0.86);
+      --glass: blur(10px) saturate(120%);
+      --shadow-lg: 0 20px 45px rgba(16,24,40,.08);
+      --shadow-md: 0 10px 25px rgba(16,24,40,.06);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+    }
+    a{color:inherit;text-decoration:none}
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+    /* Header */
+    header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--outline)}
+    .container{max-width:1100px;margin:0 auto;padding:14px 20px}
+    .brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;color:var(--brand-600)}
+    .brand-logo{
+      width:40px;height:40px;border-radius:12px;
+      background:linear-gradient(135deg, var(--brand-600), var(--brand-500));
+      box-shadow:0 10px 18px rgba(19,78,45,.25), inset 0 0 0 2px rgba(255,255,255,.25);
+      display:grid;place-items:center;color:#fff;font: weight 1000px;
+    }
+    .brand h1{margin:0;font-size:clamp(20px,2.6vw,28px);letter-spacing:.2px}
+    nav{display:flex;gap:10px;flex-wrap:wrap}
+    nav a{font-weight:700;font-size:14px;padding:8px 10px;border-radius:10px}
+    nav a:hover{background:#edf2f7}
 
-<style>
-  :root{
-    /* Brand */
-    --brand-700:#0e3c22;
-    --brand-600:#134e2d;
-    --brand-500:#1b6a40;
-    --accent-500:#3b82f6;
-    --ink:#0f172a;
-    --muted:#64748b;
-    --outline:#e2e8f0;
-    --success:#16a34a;
-    --warning:#f59e0b;
-    --danger:#ef4444;
+    /* Hero */
+    .hero{border-bottom:1px solid var(--outline);}
+    .hero-inner{
+      max-width:1100px;margin:0 auto;padding:46px 20px;display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center
+    }
+    @media(max-width:980px){.hero-inner{grid-template-columns:1fr;text-align:center} .cta-row{justify-content:center}}
+    .h-eyebrow{display:inline-block;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0;padding:6px 10px;border-radius:999px;font-weight:800;font-size:13px;margin-bottom:10px}
+    .h-title{font-size:clamp(25px,5vw,38px); line-height:1.08; margin:0 0 10px; font-weight:800; letter-spacing:-.02em}
+    .h-sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+    .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:none;border-radius:14px;padding:14px 18px;font-weight:800;cursor:pointer;box-shadow:0 12px 24px rgba(19,78,45,.18)}
+    .btn.primary {
+  background: linear-gradient(135deg, var(--brand-600), var(--brand-500));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.4s ease;
+}
 
-    /* Surfaces */
-    --bg: radial-gradient(1200px 600px at 10% -10%, #c7f9cc22 0%, transparent 60%),
-          radial-gradient(1200px 600px at 110% 10%, #b1e3ff22 0%, transparent 60%),
-          linear-gradient(180deg, #f7faf9 0%, #eef3f2 100%);
-    --card: rgba(255,255,255,0.86);
-    --glass: blur(10px) saturate(120%);
-    --shadow-lg: 0 20px 45px rgba(16,24,40,.08);
-    --shadow-md: 0 10px 25px rgba(16,24,40,.06);
-    --radius-xl: 18px;
-    --radius-lg: 14px;
-    --radius-md: 12px;
-  }
+.btn.primary:hover {
+  background: linear-gradient(135deg, #1f7a4d, #27ae60); /* etwas helleres Grün */
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.3);
+}
+    .btn.ghost{background:#fff;border:1px solid var(--outline);color:#0f172a;box-shadow:0 8px 18px rgba(2,8,23,.06)}
+    .trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .chip{background:#f1f5f9;border:1px solid #e2e8f0;color:#0f172a;padding:8px 12px;border-radius:999px;font-size:14px;font-weight:700}
 
-  *{ box-sizing:border-box }
-  html,body{ height:100% }
-  body{
-    margin:0;
-    font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    color:var(--ink);
-    background:var(--bg);
-  }
+    .media-card{
+      background:var(--card);
+      -webkit-backdrop-filter: var(--glass);
+      backdrop-filter: var(--glass);
+      border:1px solid rgba(226,232,240,.8);
+      border-radius:var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow:hidden;
+    }
+    .media-img{display:block;width:100%;height:auto}
+   
 
-  /* Header */
-  .hero{
-    position:relative; padding:38px 20px 10px; text-align:center;
-  }
-  .brand{
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    color:var(--brand-600);
-  }
-  .brand-logo{
-    width:42px; height:42px; border-radius:12px;
-    background:linear-gradient(135deg, var(--brand-600), var(--brand-500));
-    box-shadow:0 10px 18px rgba(19,78,45,.25), inset 0 0 0 2px rgba(255,255,255,.25);
-    display:grid; place-items:center; color:white; font-weight:800;
-  }
-  h1{ margin:8px 0 6px; font-size: clamp(26px, 2vw + 14px, 34px); letter-spacing: .2px }
-  .hero p{ margin:0; color:var(--muted) }
+    /* Features */
+    section{padding:38px 20px}
+    .section-inner{max-width:1100px;margin:0 auto}
+    .s-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:14px}
+    .s-title{font-size:clamp(22px,3.2vw,30px);font-weight:900;margin:0}
+    .s-sub{margin:0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:680px){.grid{grid-template-columns:1fr}}
+    .card{background:#fff;border:1px solid var(--outline);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:16px;display:grid;gap:8px}
+    .card h3{margin:0;font-size:18px;font-weight:800;color:#111827}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+    .icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,#22c55e,#3b82f6);color:#fff}
 
-  /* Layout */
-  .wrap{ max-width:1200px; margin:22px auto 40px; padding:0 20px }
-  .grid{ display:grid; grid-template-columns: 1fr 1.2fr; gap:22px }
-  @media (max-width: 980px){ .grid{ grid-template-columns:1fr } }
-
-  /* Cards (glassmorphism) */
-  .card{
-    background:var(--card);
-    -webkit-backdrop-filter: var(--glass);
-    backdrop-filter: var(--glass);
-    border:1px solid rgba(226,232,240,.8);
-    border-radius:var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-  }
-  .card .pad{ padding:22px }
-  .divider{ height:1px; background:var(--outline); margin:12px 0 6px; opacity:.7 }
-
-  /* Form */
-  .form-title{
-    font-weight:800; font-size:1.05rem; letter-spacing:.2px; color:var(--brand-600);
-    display:flex; align-items:center; gap:10px;
-  }
-  .row{ display:grid; grid-template-columns:1fr 1fr; gap:14px }
-  @media (max-width: 640px){ .row{ grid-template-columns:1fr } }
-
-  label{ display:block; font-weight:600; margin-top:12px }
-  .hint{ font-size:.85rem; color:var(--muted); margin-top:4px }
-  .field{
-    margin-top:8px; position:relative;
-  }
-  input[type="number"], select, input[type="range"]{
-    width:100%; border-radius:12px; padding:13px 14px; border:1px solid var(--outline); background:#fff;
-    font-size:1rem; transition: box-shadow .2s, border-color .2s, transform .02s;
-    box-shadow: 0 1px 0 rgba(2,8,23,.02);
-  }
-  input[type="number"]:focus, select:focus, input[type="range"]:focus{
-    outline:none; border-color:var(--accent-500);
-    box-shadow: 0 0 0 3px rgba(59,130,246,.18);
-  }
-  input[type="range"]{ padding:0; height:36px; -webkit-appearance:none; background:transparent }
-  input[type="range"]::-webkit-slider-runnable-track{ height:8px; border-radius:10px; background:linear-gradient(90deg,#e2e8f0,#cbd5e1) }
-  input[type="range"]::-webkit-slider-thumb{
-    -webkit-appearance:none; width:22px; height:22px; border-radius:50%;
-    background:linear-gradient(135deg, var(--brand-600), var(--brand-500));
-    border:2px solid #fff; margin-top:-7px; box-shadow:0 6px 12px rgba(19,78,45,.25);
-    transition: transform .08s ease;
-  }
-  input[type="range"]:active::-webkit-slider-thumb{ transform: scale(1.05) }
-
-  .range-meta{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; color:var(--muted); font-size:.9rem }
-
-  .switch{ display:flex; align-items:center; gap:10px; margin-top:10px }
-  .switch input{ width:auto }
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    width:100%; border:none; padding:14px 16px; margin-top:16px;
-    border-radius:14px; font-weight:700; font-size:1.05rem; letter-spacing:.2px;
-    cursor:pointer; color:#fff; background:linear-gradient(135deg, var(--brand-600), var(--brand-500));
-    box-shadow: 0 12px 24px rgba(19,78,45,.25);
-    transition: transform .06s ease, filter .2s ease, opacity .2s ease;
-  }
-  .btn:hover{ filter:brightness(1.03) }
-  .btn:active{ transform: translateY(1px) }
-  .btn.secondary{
-    color:var(--ink);
-    background:linear-gradient(135deg, #e7eef5, #dde7ee);
-    box-shadow: 0 8px 18px rgba(2,8,23,.06);
-  }
-
-  .error{ color:var(--danger); font-weight:700; margin-top:10px; display:none }
-
-  /* Results */
-  .heading{
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    flex-wrap:wrap;
-  }
-  .pill{
-    display:inline-flex; align-items:center; gap:8px;
-    padding:8px 12px; border-radius:999px;
-    background:linear-gradient(135deg, #e7f5ec, #dff1e7);
-    color:var(--brand-600); font-weight:700;
-    border: 1px solid #cde8d7;
-  }
-  .kpis{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px;
-  }
-  .kpi{
-    background:linear-gradient(180deg, #ffffff, #f6fbff);
-    border:1px solid var(--outline); border-radius:14px; padding:14px;
-    box-shadow: var(--shadow-md);
-  }
-  .kpi .lbl{ font-size:.85rem; color:var(--muted) }
-  .kpi .val{ font-size:1.25rem; font-weight:800; letter-spacing:.2px }
-  .kpi .sub{ font-size:.8rem; color:var(--muted) }
-
-  .progress{ margin:16px 0 6px; height:14px; background:#eef2f7; border-radius:999px; overflow:hidden; border:1px solid #e2e8f0 }
-  .progress > div{
-    height:100%; width:0%;
-    background:linear-gradient(90deg, #22c55e, #16a34a);
-    box-shadow: inset 0 0 10px rgba(255,255,255,.35);
-    transition:width .6s cubic-bezier(.2,.7,.2,1);
-  }
-  .progress-note{ font-size:.92rem; color:var(--muted) }
-
-  .section-caption{ font-weight:700; color:#111827; margin:12px 0 8px }
-  .note{ background:#fffdf7; border:1px dashed #f59e0b55; color:#7c4a03; padding:10px 12px; border-radius:12px }
-
-  .callout{ border-left:6px solid var(--brand-600); background:#edf7f1; border:1px solid #cde8d7; padding:12px; border-radius:12px; }
-
-  .rec{ border-radius:14px; padding:12px; border:1px solid var(--outline); margin-top:10px }
-  .rec.ok{ background:#ecfdf5; border-color:#bbf7d0; color:#065f46 }
-  .rec.warn{ background:#fff7ed; border-color:#fed7aa; color:#7c2d12 }
-  .rec.bad{ background:#fef2f2; border-color:#fecaca; color:#7f1d1d }
-
-  .charts{ display:grid; grid-template-columns: 1fr; gap:14px; margin-top:12px }
-  .chart-card{ background:#fff; border:1px solid var(--outline); border-radius:14px; padding:12px; box-shadow:var(--shadow-md) }
-  canvas{ max-width:100%; height:auto }
-
-  .foot{ text-align:center; color:var(--muted); font-size:.9rem; padding:20px 0 30px }
-</style>
+  
+    /* Footer (same as Finanzrechner) */
+    .site-footer {
+      background:#f8fafc;
+      border-top:1px solid var(--outline);
+      margin-top:40px;
+    }
+    .footer-container {
+      max-width:1200px;
+      margin:0 auto;
+      padding:32px 20px;
+      display:grid;
+      gap:28px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .footer-col h3 {
+      font-size:16px;
+      font-weight:700;
+      margin-bottom:12px;
+      color:var(--brand-600);
+    }
+    .footer-col p, .footer-col a {
+      font-size:14px;
+      color:var(--muted);
+      margin:6px 0;
+      text-decoration:none;
+    }
+    .footer-col a:hover { color:var(--accent-500); }
+    .social-icons { margin-top:10px; display:flex; flex-wrap:wrap; gap:12px; }
+    .social-icons img { width:28px; height:28px; filter:grayscale(100%) opacity(.7); transition:filter .2s, transform .2s; }
+    .social-icons img:hover { filter:none; transform:scale(1.08); }
+    .footer-bottom { border-top:1px solid var(--outline); background:#ffffff; }
+    .footer-bottom-inner {
+      max-width:1200px; margin:0 auto; padding:14px 20px;
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center;
+      font-size:13px; color:var(--muted);
+    }
+    .footer-bottom .sep{opacity:.5}
+  </style>
 </head>
 <body>
-  <section class="hero">
-    <div class="brand">
-      <div class="brand-logo">JM</div>
+  <header>
+    <div class="container brandbar">
+      <div class="brand">
+        <div class="brand-logo">JM</div>
+        <div>
+          <h1>JMVEST Finanzcheck</h1>
+          <small style="color:var(--muted)">Motivier dich & plane realistisch</small>
+        </div>
+      </div>
+      
+    </div>
+  </header>
+
+  <section class="hero" aria-label="Einführung Finanzcheck">
+    <div class="hero-inner">
       <div>
-        <h1>JMVEST Finanzcheck</h1>
-        <p>Motivier dich & plane realistisch – klar, schnell und schön.</p>
+        <span class="h-eyebrow">📊 Dein persönlicher Finanzcheck</span>
+        <h2 class="h-title">In 1&nbsp;Minuten zu einem realistischen Plan</h2>
+        <p class="h-sub">Gib Einkommen, Ausgaben und Ziel ein – wir zeigen dir Rate, Zielreichweite und eine klare Visualisierung inkl. Zinseszins‑Anteil.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="index%20Finanzrechner.html">Jetzt Finanzcheck starten 🚀</a>
+         
+        </div>
+        <div class="trust">
+          <span class="chip">✅ Klare KPIs</span>
+          <span class="chip">🧮 Zinseszins‑Visualisierung</span>
+          <span class="chip">🛟 Sicher und schnell</span>
+          <span class="chip">🔒 Bleibt nur im Browser</span>
+        </div>
+      </div>
+      <div class="media-card" aria-hidden="true">
+        <img class="media-img" src="finanzcheck.png" alt="" onerror="this.src='https://dummyimage.com/960x600/ffffff/e2e8f0&text=Finanzcheck+Preview'">
+        
       </div>
     </div>
   </section>
 
-  <main class="wrap">
-    <div class="grid">
-      <!-- FORM -->
-      <form id="financeForm" class="card" novalidate aria-describedby="formHelp">
-        <div class="pad">
-          <div class="form-title">Eingaben</div>
+  
 
-          <label for="income">💰 Monatliches Nettoeinkommen (€)</label>
-          <div class="field"><input type="number" id="income" min="0" inputmode="decimal" placeholder="z. B. 2.800" required></div>
-          <p class="hint">Netto pro Monat.</p>
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <!-- Branding -->
+      <div class="footer-col">
+        <h3>JMvest GbR</h3>
+        <p>Building your wealth • Securing your future</p>
+        <p><a href="#">Haftungsausschluss: Keine Anlageberatung</a></p>
+      </div>
 
-          <label for="expenses">🏠 Monatliche Fixkosten (€)</label>
-          <div class="field"><input type="number" id="expenses" min="0" inputmode="decimal" placeholder="z. B. 1.400" required></div>
-          <p class="hint">Miete, Versicherungen, Abos, ÖPNV …</p>
+      <!-- Rechtliches -->
+      <div class="footer-col">
+        <h3>Rechtliches</h3>
+        <p><a href="impressum.html">Impressum</a></p>
+        <p><a href="agb.html">AGB</a></p>
+      </div>
 
-          <div class="row">
-            <div>
-              <label for="lifestyle">🧭 Lebensstil (% variabler Konsum)</label>
-              <div class="field">
-                <input type="range" id="lifestyle" min="0" max="60" step="5" value="20">
-              </div>
-              <div class="range-meta"><span>0%</span><strong><span id="lifestyleVal">20</span>%</strong><span>60%</span></div>
-            </div>
-            <div>
-              <label for="assets">💼 Investierbares Vermögen (€)</label>
-              <div class="field"><input type="number" id="assets" min="0" value="0" inputmode="decimal"></div>
-              <p class="hint">Depot / Tagesgeld.</p>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <label for="goal">🎯 Ziel</label>
-          <div class="field">
-            <select id="goal" required>
-              <option value="Eigenheim" data-amount="300000">🏡 Eigenheim (300.000 €)</option>
-              <option value="Früh in Rente" data-amount="500000">🏖️ Früh in Rente (500.000 €)</option>
-              <option value="Vermögensaufbau" data-amount="200000" selected>📈 Vermögensaufbau (200.000 €)</option>
-              <option value="Kinder Studium" data-amount="100000">🎓 Studium der Kinder (100.000 €)</option>
-              <option value="Weltreise" data-amount="30000">🌍 Weltreise (30.000 €)</option>
-              <option value="Finanzielle Unabhängigkeit" data-amount="1000000">💸 Finanzielle Unabhängigkeit (1.000.000 €)</option>
-              <option value="Eigenes Ziel">✏️ Eigenes Ziel …</option>
-            </select>
-          </div>
-
-          <div id="customGoalWrap" style="display:none">
-            <label for="customGoal">Eigenes Ziel (€)</label>
-            <div class="field"><input type="number" id="customGoal" min="1" placeholder="z. B. 250.000"></div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="risk">📈 Risikoprofil</label>
-              <div class="field">
-                <select id="risk" required>
-                  <option value="0.025">🍂 Sehr gering (2,5% p.a.)</option>
-                  <option value="0.055">🍁 Defensiv Klassisch (5,5% p.a.)</option>
-                  <option value="0.065">🍀 Defensiv Innovativ (6,5% p.a.)</option>
-                  <option value="0.075">🌱 Ausgewogen Klassisch (7,5% p.a.)</option>
-                  <option value="0.090">🌳 Ausgewogen Innovativ (9% p.a.)</option>
-                  <option value="0.095">🌲 Wachstum Klassisch (9,5% p.a.)</option>
-                  <option value="0.125">🌴 Wachstum Innovativ (12,5% p.a.)</option>
-                  <option value="0.160">🔥 Max. Wachstum (16% p.a.)</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label for="duration">⏳ Zeithorizont (Jahre)</label>
-              <div class="field"><input type="range" id="duration" min="1" max="30" step="1" value="15"></div>
-              <div class="range-meta"><span>1</span><strong><span id="durationVal">15</span> Jahre</strong><span>30</span></div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="switch">
-              <input type="checkbox" id="inflation">
-              <label for="inflation">📉 Inflation berücksichtigen (2% p.a.)</label>
-            </div>
-            <div class="switch">
-              <input type="checkbox" id="taxes">
-              <label for="taxes">💶 Steuer berücksichtigen (25% auf Gewinne)</label>
-            </div>
-          </div>
-
-          <label for="debt">📉 Schulden</label>
-          <div class="field">
-            <select id="debt" required>
-              <option value="Keine">Keine</option>
-              <option value="Konsumschulden">Konsumschulden</option>
-              <option value="Studienkredite">Studienkredite</option>
-              <option value="Immobilienkredite">Immobilienschulden</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <div>
-              <label for="emMonths">🛟 Notgroschen (Monate)</label>
-              <div class="field"><input type="range" id="emMonths" min="0" max="12" step="1" value="3"></div>
-              <div class="range-meta"><span>0</span><strong><span id="emMonthsVal">3</span> Monate</strong><span>12</span></div>
-            </div>
-            <div>
-              <label for="liquid">💧 Bereits vorhandene Rücklagen (€)</label>
-              <div class="field"><input type="number" id="liquid" min="0" value="0" inputmode="decimal"></div>
-            </div>
-          </div>
-
-          <button type="submit" class="btn">🚀 Check starten</button>
-          <button type="button" id="resetBtn" class="btn secondary">Zurücksetzen</button>
-
-          <p id="error" class="error" role="alert"></p>
-          <p id="formHelp" class="hint" style="text-align:center;margin-top:12px">Deine Eingaben bleiben nur im Browser.</p>
+      <!-- Kontakt & Socials -->
+      <div class="footer-col">
+        <h3>Kontakt</h3>
+        <p><a href="mailto:jminvest@outlook.de">jminvest@outlook.de</a></p>
+        <div class="social-icons">
+          <a href="https://www.linkedin.com" target="_blank"><img src="iconslinkedin.png" alt="LinkedIn"></a>
+          <a href="https://www.instagram.com" target="_blank"><img src="iconsinstagram.png" alt="Instagram"></a>
+          <a href="https://twitter.com" target="_blank"><img src="iconstwitter.png" alt="Twitter"></a>
+          <a href="https://www.youtube.com" target="_blank"><img src="iconsyoutube.png" alt="YouTube"></a>
+          <a href="https://www.tiktok.com" target="_blank"><img src="iconstiktok.png" alt="TikTok"></a>
+          <a href="https://www.facebook.com" target="_blank"><img src="iconsfacebook.png" alt="Facebook"></a>
+          <a href="https://www.reddit.com" target="_blank"><img src="iconsreddit.png" alt="Reddit"></a>
+          <a href="https://www.discord.com" target="_blank"><img src="iconsdiscord.png" alt="Discord"></a>
         </div>
-      </form>
-
-      <!-- RESULTS -->
-      <section id="result" class="card" aria-live="polite" aria-label="Ergebnis" data-visible="false">
-        <div class="pad">
-          <div class="heading">
-            <h2 style="margin:0;font-size:1.15rem">Dein Ergebnis</h2>
-            <div class="pill" id="badge">Profil: –</div>
-          </div>
-
-          <div class="kpis" role="group" aria-label="Kennzahlen">
-            <div class="kpi">
-              <div class="lbl">Monatlich investierbar</div>
-              <div class="val" id="kpiMonthly">–</div>
-              <div class="sub" id="kpiMonthlyPct"></div>
-            </div>
-            <div class="kpi">
-              <div class="lbl">Zielbetrag</div>
-              <div class="val" id="kpiGoal">–</div>
-              <div class="sub" id="kpiGoalName"></div>
-            </div>
-            <div class="kpi">
-              <div class="lbl">Endvermögen (Investieren)</div>
-              <div class="val" id="kpiFV">–</div>
-              <div class="sub" id="kpiNote"></div>
-            </div>
-          </div>
-
-          <div class="progress" aria-label="Ziel-Fortschritt">
-            <div id="progressBar"></div>
-          </div>
-          <div class="progress-note" id="progressNote">Fortschritt: –</div>
-
-          <div class="section-caption">Einordnung</div>
-          <div class="callout" id="line3"></div>
-          <div class="note" id="line2" style="margin-top:10px"></div>
-          <div class="note" id="line1" style="margin-top:10px"></div>
-
-          <div id="recommendation" class="rec" style="margin-top:12px"></div>
-          <div id="debtTip" class="rec warn" style="display:none; margin-top:10px"></div>
-          <div id="emTip" class="rec warn" style="display:none; margin-top:10px"></div>
-
-          <div class="section-caption">Visualisierung</div>
-          <div class="charts">
-            <div class="chart-card"><canvas id="growthChart" aria-label="Vermögensentwicklung" role="img"></canvas></div>
-            <div class="chart-card"><canvas id="splitChart" aria-label="Beitragsaufteilung" role="img"></canvas></div>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
-  </main>
 
-  <footer class="foot">
-    Hinweis: Dieser Finanzcheck berücksichtigt keine individuellen Freibeträge, Gebühren, Spreads oder persönliche Steuersituationen. Die Ergebnisse sind Näherungen und keine Anlageberatung.
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        © <span id="y"></span> JMvest GbR
+        <span class="sep">•</span>
+        Transparent · Individuell · Reguliert
+      </div>
+    </div>
   </footer>
 
-<script>
-// ---------- Utilities ----------
-const fmt0 = new Intl.NumberFormat('de-DE', { style:'currency', currency:'EUR', maximumFractionDigits: 0 });
-const fmt2 = new Intl.NumberFormat('de-DE', { style:'currency', currency:'EUR', maximumFractionDigits: 2 });
-const pct = (x) => new Intl.NumberFormat('de-DE', { style:'percent', maximumFractionDigits:1 }).format(x);
-
-// Risk label
-function riskLabel(r){
-  const map = {
-    0.025: "🍂 Sehr gering (2,5% p.a.)",
-    0.055: "🍁 Defensiv Klassisch (5,5% p.a.)",
-    0.065: "🍀 Defensiv Innovativ (6,5% p.a.)",
-    0.075: "🌱 Ausgewogen Klassisch (7,5% p.a.)",
-    0.09:  "🌳 Ausgewogen Innovativ (9% p.a.)",
-    0.095: "🌲 Wachstum Klassisch (9,5% p.a.)",
-    0.125: "🌴 Wachstum Innovativ (12,5% p.a.)",
-    0.16:  "🔥 Max. Wachstum (16% p.a.)"
-  };
-  return map[r] || (Math.round(r*1000)/10 + "% p.a.");
-}
-
-function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-
-// Elements
-const e = (id) => document.getElementById(id);
-const form = e('financeForm');
-const result = e('result');
-const err = e('error');
-
-const incomeEl = e('income');
-const expensesEl = e('expenses');
-const lifestyleEl = e('lifestyle');
-const lifestyleVal = e('lifestyleVal');
-const assetsEl = e('assets');
-const goalEl = e('goal');
-const customGoalWrap = e('customGoalWrap');
-const customGoalEl = e('customGoal');
-const riskEl = e('risk');
-const durationEl = e('duration');
-const durationVal = e('durationVal');
-const inflationEl = e('inflation');
-const taxesEl = e('taxes');
-const debtEl = e('debt');
-const emMonthsEl = e('emMonths');
-const emMonthsVal = e('emMonthsVal');
-const liquidEl = e('liquid');
-const resetBtn = e('resetBtn');
-
-const badge = e('badge');
-const kpiMonthly = e('kpiMonthly');
-const kpiMonthlyPct = e('kpiMonthlyPct');
-const kpiGoal = e('kpiGoal');
-const kpiGoalName = e('kpiGoalName');
-const kpiFV = e('kpiFV');
-const kpiNote = e('kpiNote');
-const progressBar = e('progressBar');
-const progressNote = e('progressNote');
-const line1 = e('line1');
-const line2 = e('line2');
-const line3 = e('line3');
-const rec = e('recommendation');
-const debtTip = e('debtTip');
-const emTip = e('emTip');
-
-let growthChart, splitChart;
-
-// Events
-lifestyleEl.addEventListener('input', ()=> lifestyleVal.textContent = lifestyleEl.value);
-durationEl.addEventListener('input', ()=> durationVal.textContent = durationEl.value);
-emMonthsEl.addEventListener('input', ()=> emMonthsVal.textContent = emMonthsEl.value);
-
-goalEl.addEventListener('change', ()=>{
-  customGoalWrap.style.display = goalEl.value === 'Eigenes Ziel' ? 'block' : 'none';
-  calculate();
-});
-
-[incomeEl, expensesEl, assetsEl, customGoalEl, riskEl, durationEl,
- lifestyleEl, inflationEl, taxesEl, debtEl, emMonthsEl, liquidEl].forEach(el=>{
-  el.addEventListener('input', calculate);
-  el.addEventListener('change', calculate);
-});
-
-form.addEventListener('submit', (ev)=>{
-  ev.preventDefault();
-  calculate(true);
-  result.scrollIntoView({ behavior:'smooth', block:'start' });
-});
-
-resetBtn.addEventListener('click', ()=>{
-  form.reset();
-  lifestyleEl.value = 20; lifestyleVal.textContent = '20';
-  durationEl.value = 15; durationVal.textContent = '15';
-  emMonthsEl.value = 3; emMonthsVal.textContent = '3';
-  customGoalWrap.style.display = 'none';
-  err.style.display = 'none';
-  clearCharts();
-  result.dataset.visible = 'false';
-  [kpiMonthly,kpiMonthlyPct,kpiGoal,kpiGoalName,kpiFV,kpiNote,progressNote,line1,line2,line3].forEach(n=> n.textContent='–');
-  progressBar.style.width = '0%';
-  rec.textContent = ''; rec.className = 'rec';
-  debtTip.style.display = 'none';
-  emTip.style.display = 'none';
-});
-
-// Core calc
-function calculate(showErrors=false){
-  const income = parseFloat(incomeEl.value);
-  const expenses = parseFloat(expensesEl.value);
-  const lifestylePct = parseFloat(lifestyleEl.value)/100;
-  const assets = parseFloat(assetsEl.value||0);
-  let annualReturn = parseFloat(riskEl.value);
-  const years = parseInt(durationEl.value||0,10);
-  const inflation = inflationEl.checked ? 0.02 : 0;
-  const taxes = taxesEl.checked;
-  const debt = debtEl.value;
-  const emMonths = parseInt(emMonthsEl.value||0,10);
-  const liquid = parseFloat(liquidEl.value||0);
-
-  // Validation
-  err.style.display = 'none';
-  if (isNaN(income) || income <= 0){
-    if (showErrors){ showError('Bitte gib ein gültiges monatliches Nettoeinkommen ein.'); }
-    return;
-  }
-  if (isNaN(expenses) || expenses < 0){
-    if (showErrors){ showError('Bitte gib gültige monatliche Fixkosten ein.'); }
-    return;
-  }
-  if (expenses > income){
-    if (showErrors){ showError('Fixkosten können nicht höher als Einkommen sein.'); }
-    return;
-  }
-
-  // Goal
-  let goalName = goalEl.value;
-  let goalAmount;
-  if (goalName === 'Eigenes Ziel'){
-    goalAmount = parseFloat(customGoalEl.value||0);
-    if (!goalAmount && showErrors){
-      showError('Bitte gib deinen individuellen Zielbetrag ein.');
-      return;
-    }
-  } else {
-    const opt = goalEl.selectedOptions[0];
-    goalAmount = parseFloat(opt.dataset.amount);
-  }
-
-  // Monthly investable
-  const monthlyAvailable = income - expenses - (income * lifestylePct);
-  if (monthlyAvailable < 0){
-    if (showErrors){ showError('Dein aktueller Lebensstil überschreitet dein verfügbares Einkommen.'); }
-    return;
-  }
-
-  // Effective annual return (tax approx.)
-  if (taxes){ annualReturn = annualReturn * (1 - 0.25); }
-  const monthlyRate = annualReturn / 12;
-
-  // Time in months
-  const months = years * 12;
-  let fv_noSaving = assets * Math.pow(1 + monthlyRate, months);
-  let fv_saveNoInterest = assets + monthlyAvailable * months;
-  let fv_invest = assets;
-  for (let i=0; i<months; i++){ fv_invest = (fv_invest + monthlyAvailable) * (1 + monthlyRate); }
-
-  // Inflation to today's money
-  if (inflation > 0){
-    const infl = Math.pow(1 + inflation, years);
-    fv_noSaving /= infl;
-    fv_saveNoInterest /= infl;
-    fv_invest /= infl;
-    goalAmount /= infl;
-  }
-
-  // Emergency fund
-  const totalMonthlyOut = expenses + (income * lifestylePct);
-  const emRequired = emMonths * totalMonthlyOut;
-  const emGap = emRequired - liquid;
-  const hasEmGap = emGap > 0.5;
-
-  // KPIs
-  badge.textContent = 'Profil: ' + riskLabel(parseFloat(riskEl.value));
-  kpiMonthly.textContent = fmt2.format(monthlyAvailable);
-  kpiMonthlyPct.textContent = `= ${pct(monthlyAvailable/Math.max(1,income))} vom Einkommen`;
-  kpiGoal.textContent = fmt2.format(goalAmount);
-  kpiGoalName.textContent = goalName;
-  kpiFV.textContent = fmt2.format(fv_invest);
-  kpiNote.textContent = `${years} Jahre${inflation>0?' • inflationsbereinigt':''}${taxes?' • nach Steuern':''}`;
-
-  // Lines
-  line3.textContent = `Mit Investieren erreichst du voraussichtlich ${fmt2.format(fv_invest)} (heutige Kaufkraft).`;
-  line2.textContent = `Nur sparen (ohne Zinsen): ${fmt2.format(fv_saveNoInterest)} in ${years} Jahren.`;
-  line1.textContent = `Ohne zusätzliches Sparen (nur Zins auf vorhandenes Vermögen): ${fmt2.format(fv_noSaving)}.`;
-
-  // Progress
-  const progress = clamp((fv_invest / goalAmount) * 100, 0, 100);
-  progressBar.style.width = progress.toFixed(1) + '%';
-  progressNote.textContent = `Fortschritt: ${progress.toFixed(1)}% zum Ziel (${fmt2.format(goalAmount)}).`;
-
-  // Recommendation
-  const gap = fv_invest - goalAmount;
-  rec.className = 'rec';
-  if (gap >= 0){
-    rec.classList.add('ok');
-    rec.innerHTML = `🎉 Stark! Du erreichst dein Ziel. <strong>Überschuss: ${fmt2.format(gap)}</strong>. 
-      Behalte deine Rate bei oder ziehe eine frühere Zielerreichung in Betracht.`;
-  } else {
-    const short = -gap;
-    const neededMonthly = solveForMonthlyPayment(assets, monthlyRate, months, goalAmount);
-    const delta = Math.max(0, neededMonthly - monthlyAvailable);
-    let hint = '';
-    if (delta > 1){
-      hint = ` Erhöhe die Sparrate um ca. <strong>${fmt2.format(delta)}</strong>.`;
-    } else {
-      const moreYears = years + 5;
-      const fvExtend = futureValue(assets, monthlyAvailable, monthlyRate, moreYears*12);
-      if (fvExtend >= goalAmount){
-        hint = ` Verlängere den Zeitraum auf <strong>${moreYears} Jahre</strong>.`;
-      } else {
-        hint = ` Oder wähle ein höheres Renditeprofil (mit mehr Schwankungen).`;
-      }
-    }
-    rec.classList.add(short > goalAmount*0.3 ? 'bad' : 'warn');
-    rec.innerHTML = `⚠️ Dir fehlen ca. <strong>${fmt2.format(short)}</strong>.${hint}`;
-  }
-
-  // Debt & Emergency notes
-  if (debt !== 'Keine'){
-    debtTip.style.display = 'block';
-    debtTip.innerHTML = debtTipText(debt);
-  } else {
-    debtTip.style.display = 'none'; debtTip.textContent = '';
-  }
-
-  if (hasEmGap){
-    emTip.style.display = 'block';
-    emTip.innerHTML = `💡 Notgroschen-Empfehlung: ${emMonths}× Ausgaben ≈ <strong>${fmt2.format(emRequired)}</strong>.
-      Es fehlen ca. <strong>${fmt2.format(emGap)}</strong> an liquiden Rücklagen.`;
-  } else { emTip.style.display = 'none'; emTip.textContent = ''; }
-
-  drawCharts({months, monthlyAvailable, assets, monthlyRate, fv_noSaving, fv_saveNoInterest, fv_invest, goalAmount});
-
-  result.dataset.visible = 'true';
-}
-
-function showError(msg){ err.textContent = msg; err.style.display = 'block'; }
-
-function debtTipText(type){
-  switch(type){
-    case 'Konsumschulden': return '💡 Tipp: Tilge Konsumschulden zuerst – Zinsen sind oft höher als Anlagerenditen.';
-    case 'Studienkredite': return '💡 Tipp: Zahle planmäßig und prüfe Sondertilgungen (wenn zinsgünstig).';
-    case 'Immobilienkredite': return '💡 Tipp: Solide Tilgung & Rücklagen für Instandhaltung einplanen.';
-    default: return '';
-  }
-}
-
-function solveForMonthlyPayment(PV, r, n, FV_target){
-  if (r === 0){ const need = FV_target - PV; return need > 0 ? need / n : 0; }
-  const a = Math.pow(1+r, n);
-  return Math.max(0, (FV_target - PV*a) * (r / (a - 1)));
-}
-function futureValue(PV, PMT, r, n){
-  if (r === 0) return PV + PMT*n;
-  const a = Math.pow(1+r, n);
-  return PV*a + PMT*((a-1)/r);
-}
-
-// Charts
-function clearCharts(){ if (growthChart){ growthChart.destroy(); growthChart=null; } if (splitChart){ splitChart.destroy(); splitChart=null; } }
-function drawCharts(ctx){
-  const { months, monthlyAvailable, assets, monthlyRate, fv_noSaving, fv_saveNoInterest, fv_invest, goalAmount } = ctx;
-  const labels = Array.from({length: months+1}, (_,i)=> i%12===0 ? (i/12).toString() : '');
-
-  // Time series
-  let s0=[assets], s1=[assets], s2=[assets];
-  let v0=assets, v1=assets, v2=assets;
-  for (let i=1; i<=months; i++){
-    v0 = v0*(1+monthlyRate);
-    v1 = v1 + monthlyAvailable;
-    v2 = (v2 + monthlyAvailable)*(1+monthlyRate);
-    s0.push(v0); s1.push(v1); s2.push(v2);
-  }
-
-  // Growth chart
-  const gc = document.getElementById('growthChart').getContext('2d');
-  if (growthChart) growthChart.destroy();
-  growthChart = new Chart(gc, {
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        { label:'Ohne Sparen', data:s0, tension:.25 },
-        { label:'Nur sparen (ohne Zins)', data:s1, tension:.25 },
-        { label:'Investieren', data:s2, tension:.25, borderWidth:2 },
-        { label:'Ziel', data:Array.from({length: months+1}, _=> goalAmount), borderDash:[6,6], tension:0 }
-      ]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false, aspectRatio:2,
-      interaction:{ mode:'index', intersect:false },
-      plugins:{
-        legend:{ position:'top' },
-        tooltip:{ callbacks:{ label:(ctx)=> `${ctx.dataset.label}: ${fmt2.format(ctx.parsed.y)}` } }
-      },
-      scales:{
-        x:{ title:{ display:true, text:'Jahre' }, grid:{ display:false } },
-        y:{ title:{ display:true, text:'Vermögen (€)' },
-            ticks:{ callback:(v)=> fmt0.format(v) } }
-      }
-    }
-  });
-
-  // Split chart
-  const contrib = assets + monthlyAvailable*months;
-  const gains = Math.max(0, fv_invest - contrib);
-  const sc = document.getElementById('splitChart').getContext('2d');
-  if (splitChart) splitChart.destroy();
-  splitChart = new Chart(sc, {
-    type:'doughnut',
-    data:{ labels:['Eigene Einzahlungen','Erträge/Zinseszins'], datasets:[{ data:[Math.max(0,contrib), Math.max(0,gains)] }] },
-    options:{
-      responsive:true, maintainAspectRatio:false, aspectRatio:2,
-      plugins:{
-        legend:{ position:'top' },
-        tooltip:{ callbacks:{ label:(ctx)=> `${ctx.label}: ${fmt2.format(ctx.parsed)}` } }
-      },
-      cutout:'58%'
-    }
-  });
-}
-
-// Init
-setTimeout(()=> calculate(false), 80);
-</script>
+  <script>
+    (function(){ var el=document.getElementById('y'); if(el) el.textContent=new Date().getFullYear(); })();
+  </script>
 </body>
 </html>
