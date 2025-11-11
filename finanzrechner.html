@@ -328,7 +328,7 @@
                 </div>
                 <div>
                   <div class="switch"><input type="checkbox" id="inflation_direct"><label for="inflation_direct">📉 Inflation berücksichtigen (2% p.a.)</label></div>
-                  <div class="switch"><input type="checkbox" id="taxes_direct"><label for="taxes_direct">💶 Steuer berücksichtigen (25% auf Gewinne)</label></div>
+                  <div class="switch"><input type="checkbox" id="taxes_direct"><label for="taxes_direct">💶 Steuer berücksichtigen (30,5% auf Gewinne)</label></div>
                 </div>
               </div>
 
@@ -477,7 +477,7 @@
                 </div>
                 <div class="switch">
                   <input type="checkbox" id="taxes">
-                  <label for="taxes">💶 Steuer berücksichtigen (25% auf Gewinne)</label>
+                  <label for="taxes">💶 Steuer berücksichtigen (30,5% auf Gewinne)</label>
                 </div>
               </div>
 
@@ -883,7 +883,7 @@ function calculate(showErrors=false){
     }
   }
 
-  if (taxes){ annualReturn = annualReturn * (1 - 0.25); }
+  if (taxes){ annualReturn = annualReturn * (1 - 0.305); }
   const monthlyRate = annualReturn / 12;
   const months = years * 12;
 
@@ -1091,3 +1091,4 @@ setTimeout(()=>{
 });</script>
 </body>
 </html>
+
